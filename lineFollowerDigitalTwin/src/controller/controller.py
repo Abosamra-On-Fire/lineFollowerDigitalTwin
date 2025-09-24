@@ -45,12 +45,12 @@ import numpy as np
 
 # Controller parameters
 lookahead_distance = 0.5   # meters
-v_nominal = 2            # m/s
+v_nominal = 1.5            # m/s
 
 # PID gains
-Kp = 11.2
-Ki = 0.8
-Kd = 3.2
+Kp = 6.0
+Ki = 0.0
+Kd = 2.4
 dt = 0.02
 
 class PID:

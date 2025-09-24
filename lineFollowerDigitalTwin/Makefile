@@ -23,8 +23,8 @@ sim:
 
 # End of user custom code region. Please don't edit beyond this point.
 
-	vsiSim -xh lineFollowerDigitalTwin.dt
-# 	vsiSim lineFollowerDigitalTwin.dt
+# 	vsiSim -xh lineFollowerDigitalTwin.dt
+	vsiSim lineFollowerDigitalTwin.dt
 clean:
 # Start of user custom code region. Please apply edits only within these regions:  clean target
 

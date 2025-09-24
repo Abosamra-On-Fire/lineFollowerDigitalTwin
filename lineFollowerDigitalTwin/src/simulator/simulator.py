@@ -66,8 +66,8 @@ def make_bezier_chain(control_points, resolution=0.02):
     return np.array(pts).tolist()
 
 # noise parameters
-noise_std_pos = 0.0   # meters (std dev for x, y)
-noise_std_theta = 0.00  # radians
+noise_std_pos = 0.01   # meters (std dev for x, y)
+noise_std_theta = 0.005  # radians
 
 # robot state
 state = {"x": 0.5, "y": 0.3, "theta": 0.0}
@@ -77,17 +77,19 @@ v_nominal = 0.6   # nominal forward velocity
 dt = 0.02         # integration timestep (will be synced to VSI step)
 L = 50.0           # path length in meters
 
-custom_x = random.randint(-500, 500)/ 100.0
-custom_y = random.randint(-100, 100)/ 100.0
-
-# custom_x = random.randint(-500, 500)/ 100.0
+# custom_x = random.randint(0, 500)/ 100.0
 # custom_y = random.randint(-100, 100)/ 100.0
+# while custom_y < 0.05:
+# 	custom_y = random.randint(-100, 100)/ 100.0
+
+custom_x = 1.0
+custom_y = 0.7
 
 cps = [[0,0],[2,0],[4,4],[6,0],[8,-4],[10,0],[12,0]]
 path = make_bezier_chain(cps, 0.01)
 # path points (straight along x)
-# path_points = path
-path_points = [(i*0.1, 0.0) for i in range(int(L/0.1))]
+path_points = path
+# path_points = [(i*0.1, 0.0) for i in range(int(L/0.1))]
 
 # fill into MySignals initial
 # note: MySignals has fixed size 500 arrays

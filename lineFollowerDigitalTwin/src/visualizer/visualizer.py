@@ -70,12 +70,12 @@ traj_y = []
 # KPI storage
 errors = []         # lateral error history
 times = []          # time history
-settling_tol = 0.05 # meters tolerance for settling time
+settling_tol = 0.03 # meters tolerance for settling time
 overshoot = 0.0
 settling_time = None
 steady_state_error = None
 
-experiment = "e1" 
+experiment = "e4" 
 # End of user custom code region. Please don't edit beyond this point.
 class Visualizer:
 
@@ -237,6 +237,14 @@ class Visualizer:
 			# print(times)
 			timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 			if errors:
+				inx = 0
+				for i in range(len(errors)):
+					if abs(errors[i])<= settling_tol:
+						inx = i
+						break
+				errors = errors[inx:]
+				times = times[inx:]
+
 				errors = np.array(errors)
 				times = np.array(times)
 				print("-1")
@@ -247,7 +255,7 @@ class Visualizer:
 
 				steady_state_error = np.mean(errors[-steady_state_window:])
 				print("-5")
-
+				
 				overshoot = np.max(errors) - steady_state_error
 				print("-2")
 				overshoot = max(0.0, overshoot) 
