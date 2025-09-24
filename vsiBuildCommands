@@ -1,27 +1,24 @@
-# === Components ===
+# --- Components ---
 add component -type Python -name simulator
 add component -type Python -name controller
 add component -type Python -name visualizer
 
-# === Ports ===
+# --- Ports ---
 add port -componentName simulator  -name simulator  -gateway python2DtEthernet
 add port -componentName controller -name controller -gateway python2DtEthernet
 add port -componentName visualizer -name visualizer -gateway python2DtEthernet
 
-# === Configure ports ===
+# --- ports config 
 config port -componentName simulator  -portName simulator  -macAddress 12:34:56:78:9A:01 -ipAddress 192.168.1.10
 config port -componentName controller -portName controller -macAddress 12:34:56:78:9A:02 -ipAddress 192.168.1.11
 config port -componentName visualizer -portName visualizer -macAddress 12:34:56:78:9A:03 -ipAddress 192.168.1.12
 
-# === Define signals ===
+# --- signals ---
 define componentSignals -componentName simulator  -signals [x:double:output,y:double:output,theta:double:output,t:double:output,pathX:double[500]:output,pathY:double[500]:output,pathLen:int:output,v:double:input,omega:double:input,t_cmd:double:input]
 
 define componentSignals -componentName controller -signals [x:double:input,y:double:input,theta:double:input,t:double:input,pathX:double[500]:input,pathY:double[500]:input,pathLen:int:input,v:double:output,omega:double:output,t_cmd:double:output]
 
 define componentSignals -componentName visualizer -signals [x:double:input,y:double:input,theta:double:input,t:double:input,pathX:double[500]:input,pathY:double[500]:input,pathLen:int:input]
-
-
-# Simulator offers a TCP server
 
 
 add portSocket -componentName simulator  -portName simulator  -ipPortNum 8070 -socketType client -protocol tcpIp
@@ -34,7 +31,7 @@ add portSocket -componentName simulator -portName simulator -ipPortNum 8080 -soc
 
 
 
-# === Connect signals ===
+# --- Connect signals ---
 # Simulator -> Controller
 connect signals -sourceSignal simulator.x      -destSignal controller.x      -sourcePortName simulator -destPortName controller
 connect signals -sourceSignal simulator.y      -destSignal controller.y      -sourcePortName simulator -destPortName controller
@@ -58,7 +55,7 @@ connect signals -sourceSignal controller.v     -destSignal simulator.v       -so
 connect signals -sourceSignal controller.omega -destSignal simulator.omega   -sourcePortName controller -destPortName simulator
 connect signals -sourceSignal controller.t_cmd -destSignal simulator.t_cmd   -sourcePortName controller -destPortName simulator
 
-# === Simulation config ===
+# --- Simulation config ---
 set digitalTwinName lineFollowerDigitalTwin
 set workspaceDir .
 set simulationStep 0.02 s

@@ -91,9 +91,7 @@ path = make_bezier_chain(cps, 0.01)
 path_points = path
 # path_points = [(i*0.1, 0.0) for i in range(int(L/0.1))]
 
-# fill into MySignals initial
-# note: MySignals has fixed size 500 arrays
-# we populate the first N entries
+
 for i, (px, py) in enumerate(path_points):
     MySignals().pathX[i] = px
     MySignals().pathY[i] = py

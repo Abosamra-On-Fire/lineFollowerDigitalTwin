@@ -150,15 +150,6 @@ class Visualizer:
 					errors.append(error)
 					times.append(self.mySignals.t)
 
-				# Update trajectory line
-				# traj_line.set_data(traj_x, traj_y)
-				# robot_dot.set_data([self.mySignals.x], [self.mySignals.y])
-
-				# # Autoscale axes
-				# ax.relim()
-				# ax.autoscale_view()
-
-				# plt.pause(0.001)
 
 
 				# End of user custom code region. Please don't edit beyond this point.
