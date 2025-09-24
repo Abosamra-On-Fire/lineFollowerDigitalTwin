@@ -1,0 +1,66 @@
+# === Components ===
+add component -type Python -name simulator
+add component -type Python -name controller
+add component -type Python -name visualizer
+
+# === Ports ===
+add port -componentName simulator  -name simulator  -gateway python2DtEthernet
+add port -componentName controller -name controller -gateway python2DtEthernet
+add port -componentName visualizer -name visualizer -gateway python2DtEthernet
+
+# === Configure ports ===
+config port -componentName simulator  -portName simulator  -macAddress 12:34:56:78:9A:01 -ipAddress 192.168.1.10
+config port -componentName controller -portName controller -macAddress 12:34:56:78:9A:02 -ipAddress 192.168.1.11
+config port -componentName visualizer -portName visualizer -macAddress 12:34:56:78:9A:03 -ipAddress 192.168.1.12
+
+# === Define signals ===
+define componentSignals -componentName simulator  -signals [x:double:output,y:double:output,theta:double:output,t:double:output,pathX:double[500]:output,pathY:double[500]:output,pathLen:int:output,v:double:input,omega:double:input,t_cmd:double:input]
+
+define componentSignals -componentName controller -signals [x:double:input,y:double:input,theta:double:input,t:double:input,pathX:double[500]:input,pathY:double[500]:input,pathLen:int:input,v:double:output,omega:double:output,t_cmd:double:output]
+
+define componentSignals -componentName visualizer -signals [x:double:input,y:double:input,theta:double:input,t:double:input,pathX:double[500]:input,pathY:double[500]:input,pathLen:int:input]
+
+
+# Simulator offers a TCP server
+
+
+add portSocket -componentName simulator  -portName simulator  -ipPortNum 8070 -socketType client -protocol tcpIp
+add portSocket -componentName controller -portName controller -ipPortNum 8070 -socketType server -protocol tcpIp
+
+
+# Controller and visualizer connect as TCP clients to simulator
+add portSocket -componentName visualizer -portName visualizer -ipPortNum 8080 -socketType client -protocol tcpIp
+add portSocket -componentName simulator -portName simulator -ipPortNum 8080 -socketType server -protocol tcpIp
+
+
+
+# === Connect signals ===
+# Simulator -> Controller
+connect signals -sourceSignal simulator.x      -destSignal controller.x      -sourcePortName simulator -destPortName controller
+connect signals -sourceSignal simulator.y      -destSignal controller.y      -sourcePortName simulator -destPortName controller
+connect signals -sourceSignal simulator.theta  -destSignal controller.theta  -sourcePortName simulator -destPortName controller
+connect signals -sourceSignal simulator.t      -destSignal controller.t      -sourcePortName simulator -destPortName controller
+connect signals -sourceSignal simulator.pathX  -destSignal controller.pathX  -sourcePortName simulator -destPortName controller
+connect signals -sourceSignal simulator.pathY  -destSignal controller.pathY  -sourcePortName simulator -destPortName controller
+connect signals -sourceSignal simulator.pathLen -destSignal controller.pathLen -sourcePortName simulator -destPortName controller
+
+# Simulator -> Visualizer
+connect signals -sourceSignal simulator.x      -destSignal visualizer.x      -sourcePortName simulator -destPortName visualizer
+connect signals -sourceSignal simulator.y      -destSignal visualizer.y      -sourcePortName simulator -destPortName visualizer
+connect signals -sourceSignal simulator.theta  -destSignal visualizer.theta  -sourcePortName simulator -destPortName visualizer
+connect signals -sourceSignal simulator.t      -destSignal visualizer.t      -sourcePortName simulator -destPortName visualizer
+connect signals -sourceSignal simulator.pathX  -destSignal visualizer.pathX  -sourcePortName simulator -destPortName visualizer
+connect signals -sourceSignal simulator.pathY  -destSignal visualizer.pathY  -sourcePortName simulator -destPortName visualizer
+connect signals -sourceSignal simulator.pathLen -destSignal visualizer.pathLen -sourcePortName simulator -destPortName visualizer
+
+# Controller -> Simulator
+connect signals -sourceSignal controller.v     -destSignal simulator.v       -sourcePortName controller -destPortName simulator
+connect signals -sourceSignal controller.omega -destSignal simulator.omega   -sourcePortName controller -destPortName simulator
+connect signals -sourceSignal controller.t_cmd -destSignal simulator.t_cmd   -sourcePortName controller -destPortName simulator
+
+# === Simulation config ===
+set digitalTwinName lineFollowerDigitalTwin
+set workspaceDir .
+set simulationStep 0.02 s
+set totalSimTime 10 s
+generate

@@ -1,0 +1,76 @@
+-N
+0 simulator 1
+x double o 2
+y double o 2
+theta double o 2
+t double o 2
+pathX double[500] o 2
+pathY double[500] o 2
+pathLen int o 2
+v double i 1
+omega double i 1
+t_cmd double i 1
+-N
+1 controller 1
+x double i 1
+y double i 1
+theta double i 1
+t double i 1
+pathX double[500] i 1
+pathY double[500] i 1
+pathLen int i 1
+v double o 1
+omega double o 1
+t_cmd double o 1
+-N
+2 visualizer 1
+v double i 0
+omega double i 0
+t_cmd double i 0
+x double i 1
+y double i 1
+theta double i 1
+t double i 1
+pathX double[500] i 1
+pathY double[500] i 1
+pathLen int i 1
+-ETH
+0 12:34:56:78:9a:01
+1 12:34:56:78:9a:02
+2 12:34:56:78:9a:03
+-C
+o 0 x 1 x
+o 0 x 2 x
+o 0 y 1 y
+o 0 y 2 y
+o 0 theta 1 theta
+o 0 theta 2 theta
+o 0 t 1 t
+o 0 t 2 t
+o 0 pathX 1 pathX
+o 0 pathX 2 pathX
+o 0 pathY 1 pathY
+o 0 pathY 2 pathY
+o 0 pathLen 1 pathLen
+o 0 pathLen 2 pathLen
+i 0 v 1 v
+i 0 omega 1 omega
+i 0 t_cmd 1 t_cmd
+i 1 x 0 x
+i 1 y 0 y
+i 1 theta 0 theta
+i 1 t 0 t
+i 1 pathX 0 pathX
+i 1 pathY 0 pathY
+i 1 pathLen 0 pathLen
+o 1 v 0 v
+o 1 omega 0 omega
+o 1 t_cmd 0 t_cmd
+i 2 x 0 x
+i 2 y 0 y
+i 2 theta 0 theta
+i 2 t 0 t
+i 2 pathX 0 pathX
+i 2 pathY 0 pathY
+i 2 pathLen 0 pathLen
+-END
