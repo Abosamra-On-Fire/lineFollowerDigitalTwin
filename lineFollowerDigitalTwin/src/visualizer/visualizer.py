@@ -63,7 +63,15 @@ def compute_settling_time(times, errors, tol=0.1, window=1.0):
                 return times[i]
     return None  # not settled
 
-# remove interactive plotting, just prepare storage
+plt.ion()
+fig, ax = plt.subplots()
+path_line, = ax.plot([], [], 'r--', label='Path')
+traj_line, = ax.plot([], [], 'b-', label='Trajectory')
+robot_dot, = ax.plot([], [], 'go', markersize=8, label='Robot') 
+ax.set_xlabel("X [m]")
+ax.set_ylabel("Y [m]")
+ax.set_title("Trajectory vs Path")
+ax.legend()
 traj_x = []
 traj_y = []
 
@@ -76,6 +84,8 @@ settling_time = None
 steady_state_error = None
 
 experiment = "e4" 
+
+
 # End of user custom code region. Please don't edit beyond this point.
 class Visualizer:
 
@@ -136,6 +146,8 @@ class Visualizer:
 				if self.mySignals.pathLen > 0:
 					traj_x.append(self.mySignals.x)
 					traj_y.append(self.mySignals.y)
+					path_line.set_data(self.mySignals.pathX[:self.mySignals.pathLen],
+									self.mySignals.pathY[:self.mySignals.pathLen])
 					px = np.array(self.mySignals.pathX[:self.mySignals.pathLen])
 					py = np.array(self.mySignals.pathY[:self.mySignals.pathLen])
 					path = np.column_stack((px, py))
@@ -151,14 +163,14 @@ class Visualizer:
 					times.append(self.mySignals.t)
 
 				# Update trajectory line
-				# traj_line.set_data(traj_x, traj_y)
-				# robot_dot.set_data([self.mySignals.x], [self.mySignals.y])
+				traj_line.set_data(traj_x, traj_y)
+				robot_dot.set_data([self.mySignals.x], [self.mySignals.y])
 
-				# # Autoscale axes
-				# ax.relim()
-				# ax.autoscale_view()
+				# Autoscale axes
+				ax.relim()
+				ax.autoscale_view()
 
-				# plt.pause(0.001)
+				plt.pause(0.001)
 
 
 				# End of user custom code region. Please don't edit beyond this point.
@@ -302,24 +314,10 @@ class Visualizer:
 					])
 				print("[Visualizer] KPIs saved to kpi_results.csv")
 			# Save the plot with timestamp
-			
 			filename = f"{experiment}/trajectory_{timestamp}.png"
-
-			plt.figure()
-			if self.mySignals.pathLen > 0:
-				plt.plot(self.mySignals.pathX[:self.mySignals.pathLen],
-						self.mySignals.pathY[:self.mySignals.pathLen], 'r--', label='Path')
-			plt.plot(traj_x, traj_y, 'b-', label='Trajectory')
-			plt.plot(traj_x[-1], traj_y[-1], 'go', markersize=8, label='Final Robot Pos')
-			plt.xlabel("X [m]")
-			plt.ylabel("Y [m]")
-			plt.title("Trajectory vs Path")
-			plt.legend()
-			plt.grid(True)
+			plt.ioff()
 			plt.savefig(filename, dpi=300)
-			plt.close()
 			print(f"[visualizer] Saved trajectory plot as {filename}")
-
 
 			if(vsiCommonPythonApi.getSimulationTimeInNs() < self.totalSimulationTime):
 
